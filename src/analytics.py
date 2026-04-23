@@ -95,5 +95,15 @@ def generate_insights(entries):
     if deep_nights:
         avg_quality = sum(e["sleep_quality"] for e in deep_nights) / len(deep_nights)
         insights.append(f"💤 В глубокие ночи (≥7.5ч) качество сна = {avg_quality:.1f}/10")
-    
+        # Новый инсайт про качество сна и энергию (добавьте это в функцию generate_insights)
+    if len(entries) >= 3:
+        high_energy = list(filter(lambda e: e["morning_energy"] >= 8, entries))
+        low_energy = list(filter(lambda e: e["morning_energy"] <= 4, entries))
+        
+        if high_energy and low_energy:
+            avg_quality_high = sum(e["sleep_quality"] for e in high_energy) / len(high_energy)
+            avg_quality_low = sum(e["sleep_quality"] for e in low_energy) / len(low_energy)
+            if avg_quality_high > avg_quality_low:
+                diff = avg_quality_high - avg_quality_low
+                insights.append(f"⚡ Высокая утренняя энергия коррелирует с качеством сна: +{diff:.1f} балла")
     return insights if insights else ["Продолжайте заполнять дневник для персонализированных советов"]
